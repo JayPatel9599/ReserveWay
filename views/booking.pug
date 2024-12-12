@@ -1,0 +1,43 @@
+doctype html
+html
+  head
+    title #{title}
+    link(rel="stylesheet", href="/styles/booking.css")
+    link(rel="stylesheet", href="/styles/header.css")
+    script(src="/scripts/booking.js")
+  body
+    include ../partials/header.pug
+    div.container
+      h1 Booking Page
+      p Select a court and time slot to make a booking.
+      div.calendar-container
+        table
+          thead
+            tr
+              th Time
+              each court in courts
+                th #{court.name} (#{court.game})
+          tbody
+            each time in timeSlots
+              tr
+                td #{time}
+                each court in courts
+                  - const booking = bookings.find(b => b.court === court.name && new Date(b.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) === time.split(' - ')[0]);
+                  td.booking-cell(
+                    data-time=time,
+                    data-court=court.name,
+                    class=(booking ? 'booked' : '')
+                  )
+                    if booking
+                      p Booked by #{booking.bookedBy}
+      // Modal for confirming booking
+      div#bookingModal.hidden
+        div.modal-content
+          h2 Confirm Your Booking
+          form(method='POST', action='/booking')
+            label(for='court') Court:
+            input(type='text', name='court', id='court', readonly)
+            label(for='time') Time:
+            input(type='text', name='time', id='time', readonly)
+            button(type='submit') Confirm Booking
+            button(type='button', id='closeModal') Cancel

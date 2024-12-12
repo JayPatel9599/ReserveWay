@@ -1,0 +1,18 @@
+doctype html
+html
+  head
+    title #{title}
+    link(rel="stylesheet", href="/styles/register.css")
+  body
+    include ../partials/header.pug
+    div.container
+      h1 Register
+      form(method='POST', action='/register')
+        input(type='text', name='name', placeholder='Full Name', required)
+        input(type='text', name='username', placeholder='Username', required)
+        input(type='email', name='email', placeholder='Email Address', required)
+        input(type='password', name='password', placeholder='Password', required)
+        input(type='text', name='studentNumber', placeholder='Student Number', required)
+        button(type='submit') Register
+      if error
+        p.error #{error}
